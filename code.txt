@@ -1,1 +1,50 @@
-Rola~~~~~
+#include <iostream>
+#include <opencv2/opencv.hpp>
+
+using namespace cv;
+
+void show(Mat, string);
+
+int main()
+{
+	Mat test, test2, test3, test4, mask;
+	string window;
+
+	test = imread("test.png", 1);
+	window = "test_window";
+	show(test, window);
+
+
+	//GaussianBlur
+	GaussianBlur(test, test2, Size(9, 9), 0, 0);
+	window = "test2_window";
+	show(test2, window);
+
+
+	//Canny edge detection
+	Canny(test, test3, 50, 150, 3);
+	window = "test3_window";
+	show(test3, window);
+
+	
+	//color filter
+	Mat hsv;
+	cvtColor(test, hsv, CV_BGR2HSV);
+	inRange(hsv, Scalar(0, 100, 120), Scalar(10, 255, 255), mask);
+	test.copyTo(test4, mask);
+	window = "test4_window";
+	show(test4, window);
+
+	return 0;
+}
+
+void show(Mat image, string window)
+{
+	namedWindow(window, 1);
+	while (true)
+	{
+		imshow(window, image);
+		if (waitKey(10) == 27) break;
+	}
+	destroyWindow(window);
+}
